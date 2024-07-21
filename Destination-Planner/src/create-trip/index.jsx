@@ -12,7 +12,6 @@ import GooglePlacesAutocomplete from 'react-google-places-autocomplete'
      <div className='mt-20'>
          <div>
             <h2 className='text-xl my-3 font-medium'>What is destination of choice?</h2>
-             
          </div>
      </div>  
     </div>
