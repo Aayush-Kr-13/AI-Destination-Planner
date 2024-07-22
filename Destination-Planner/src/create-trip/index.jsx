@@ -146,6 +146,7 @@ function CreateTrip() {
     if (user) {
       try {
         console.log(user);
+        console.log(JSON.stringify(user, null, 2)); // Pretty-print JSON
         setOpenDialog(false);
         await onGenerateTrip();
       } catch (error) {
