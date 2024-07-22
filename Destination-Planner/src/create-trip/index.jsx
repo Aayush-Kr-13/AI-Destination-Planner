@@ -2,8 +2,9 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { Button } from '../components/ui/button';
 import { Input } from '../components/ui/input';
-import { SelectBudgetOptions, SelectTravelList } from '@/constants/options';
+import { AI_PROMPT, SelectBudgetOptions, SelectTravelList } from '@/constants/options';
 import { toast } from '../components/ui/use-toast'; 
+import { chatSession } from '@/service/AIModal';
 
 // Debounce function to limit the rate at which the API is called
 const debounce = (func, delay) => {
@@ -44,7 +45,7 @@ function CreateTrip() {
     console.log(formData);
   }, [formData]);
 
-  const OnGenerateTrip = () => {
+  const OnGenerateTrip =async () => {
     if (!formData?.location) {
       toast({ title: "Please enter your destination", description: "You need to specify a destination for your trip." });
       return;
@@ -61,6 +62,20 @@ function CreateTrip() {
       toast({ title: "Please enter travel companions", description: "Indicate who you are traveling with." });
       return;
     }
+
+    const FINAL_PROMPT=AI_PROMPT
+    .replace('{location}',formData?.location)
+    .replace('{totalDays}',formData?.noOfDays)
+    .replace('{traveler}',formData?.traveler)
+    .replace('{budget}',formData?.budget)
+    .replace('{totalDays}',formData?.noOfDays)
+
+    console.log(FINAL_PROMPT)
+
+    const result=await chatSession.sendMessage(FINAL_PROMPT);
+
+    console.log(result?.response?.text());
+      
 
   };
 
