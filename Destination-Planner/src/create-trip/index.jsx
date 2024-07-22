@@ -19,10 +19,10 @@ function CreateTrip() {
   const [error, setError] = useState(null);
   const [showDropdown, setShowDropdown] = useState(false);
   const [formData, setFormData] = useState({
-    name: '',
-    days: '',
+    location: '',
+    noOfDays: '',
     budget: '',
-    travelWith: '',
+    traveler: '',
   });
 
   const handleInputChange = (name, value) => {
@@ -82,7 +82,7 @@ function CreateTrip() {
 
   const handleSelectCity = (cityName) => {
     setDestination(cityName);
-    handleInputChange('name', cityName);
+    handleInputChange('location', cityName);
     setShowDropdown(false);
   };
 
@@ -125,8 +125,8 @@ function CreateTrip() {
           <Input
             placeholder={'Ex.3'}
             type="number"
-            value={formData.days}
-            onChange={(e) => handleInputChange('days', e.target.value)}
+            value={formData.noOfDays}
+            onChange={(e) => handleInputChange('noOfDays', e.target.value)}
           />
         </div>
 
@@ -160,8 +160,8 @@ function CreateTrip() {
           {SelectTravelList.map((item, index) => (
             <div
               key={index}
-              className={`p-4 border cursor-pointer rounded-lg hover:shadow-lg ${formData.travelWith === item.title ? 'border-blue-500' : ''}`}
-              onClick={() => handleInputChange('travelWith', item.title)}
+              className={`p-4 border cursor-pointer rounded-lg hover:shadow-lg ${formData.traveler === item.title ? 'border-blue-500' : ''}`}
+              onClick={() => handleInputChange('traveler', item.title)}
             >
               <h2 className='text-4xl'>{item.icon}</h2>
               <h2 className='font-bold text-lg'>{item.title}</h2>
