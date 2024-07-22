@@ -3,8 +3,17 @@ import axios from 'axios';
 import { Button } from '../components/ui/button';
 import { Input } from '../components/ui/input';
 import { AI_PROMPT, SelectBudgetOptions, SelectTravelList } from '@/constants/options';
-import { toast } from '../components/ui/use-toast'; 
+import { toast } from '../components/ui/use-toast';
 import { chatSession } from '@/service/AIModal';
+import { useClerk } from '@clerk/clerk-react';
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle
+} from "@/components/ui/dialog";
+import { FcGoogle } from "react-icons/fc";
 
 // Debounce function to limit the rate at which the API is called
 const debounce = (func, delay) => {
@@ -16,6 +25,8 @@ const debounce = (func, delay) => {
 };
 
 function CreateTrip() {
+  const [openDialog, setOpenDialog] = useState(false);
+  const { client, openSignIn } = useClerk();
   const [destination, setDestination] = useState('');
   const [data, setData] = useState([]);
   const [error, setError] = useState(null);
@@ -28,13 +39,10 @@ function CreateTrip() {
   });
 
   const handleInputChange = (name, value) => {
-    if (name === 'noOfDays') {
-      if (value > 5) {
-        alert('Number of days cannot exceed 5.');
-        return;
-      }
+    if (name === 'noOfDays' && value > 5) {
+      alert('Number of days cannot exceed 5.');
+      return;
     }
-
     setFormData({
       ...formData,
       [name]: value,
@@ -45,7 +53,16 @@ function CreateTrip() {
     console.log(formData);
   }, [formData]);
 
-  const OnGenerateTrip =async () => {
+  const login = () => {
+    openSignIn(); // Ensure this is the correct method from Clerk
+  };
+
+  const onGenerateTrip = async () => {
+    if (!client || !client.user) {
+      setOpenDialog(true);
+      return;
+    }
+
     if (!formData?.location) {
       toast({ title: "Please enter your destination", description: "You need to specify a destination for your trip." });
       return;
@@ -63,58 +80,51 @@ function CreateTrip() {
       return;
     }
 
-    const FINAL_PROMPT=AI_PROMPT
-    .replace('{location}',formData?.location)
-    .replace('{totalDays}',formData?.noOfDays)
-    .replace('{traveler}',formData?.traveler)
-    .replace('{budget}',formData?.budget)
-    .replace('{totalDays}',formData?.noOfDays)
+    const FINAL_PROMPT = AI_PROMPT
+      .replace('{location}', formData?.location)
+      .replace('{totalDays}', formData?.noOfDays)
+      .replace('{traveler}', formData?.traveler)
+      .replace('{budget}', formData?.budget)
+      .replace('{totalDays}', formData?.noOfDays);
 
-    console.log(FINAL_PROMPT)
+    console.log(FINAL_PROMPT);
 
-    const result=await chatSession.sendMessage(FINAL_PROMPT);
-
+    const result = await chatSession.sendMessage(FINAL_PROMPT);
     console.log(result?.response?.text());
-      
-
   };
 
   // Function to handle search
   const fetchCities = async (query) => {
-  if (query.length < 3) {
-    setData([]);
-    setShowDropdown(false);
-    return;
-  }
+    if (query.length < 3) {
+      setData([]);
+      setShowDropdown(false);
+      return;
+    }
 
-  const options = {
-    method: 'GET',
-    url: 'https://booking-com.p.rapidapi.com/v1/static/cities',
-    params: {
-      page: '0',
-      name: query,
-    },
-    headers: {
-      'x-rapidapi-key': import.meta.env.VITE_RAPIDAPI_KEY,
-      'x-rapidapi-host': 'booking-com.p.rapidapi.com',
-    },
+    const options = {
+      method: 'GET',
+      url: 'https://booking-com.p.rapidapi.com/v1/static/cities',
+      params: { page: '0', name: query },
+      headers: {
+        'x-rapidapi-key': import.meta.env.VITE_RAPIDAPI_KEY,
+        'x-rapidapi-host': 'booking-com.p.rapidapi.com',
+      },
+    };
+
+    try {
+      const response = await axios.request(options);
+      const limitedData = response.data.result.slice(0, 5); // Limit the results to 5
+      setData(limitedData); // Store the limited data in the state
+      setError(null); // Clear any previous error
+      setShowDropdown(true); // Show the dropdown
+      console.log(response.data);
+    } catch (error) {
+      setError(error); // Store the error in the state
+      setData([]); // Clear any previous data
+      setShowDropdown(false); // Hide the dropdown
+      console.error(error);
+    }
   };
-
-  try {
-    const response = await axios.request(options);
-    const limitedData = response.data.result.slice(0, 5); // Limit the results to 5
-    setData(limitedData); // Store the limited data in the state
-    setError(null); // Clear any previous error
-    setShowDropdown(true); // Show the dropdown
-    console.log(response.data);
-  } catch (error) {
-    setError(error); // Store the error in the state
-    setData([]); // Clear any previous data
-    setShowDropdown(false); // Hide the dropdown
-    console.error(error);
-  }
-};
-
 
   // Debounced search function
   const debouncedFetchCities = debounce(fetchCities, 300);
@@ -216,8 +226,24 @@ function CreateTrip() {
       </div>
       
       <div className='my-10 justify-end flex'>
-        <Button onClick={OnGenerateTrip}>Generate Trip</Button>
+        <Button onClick={onGenerateTrip}>Generate Trip</Button>
       </div>
+      
+      <Dialog open={openDialog} onOpenChange={setOpenDialog}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogDescription>
+              <img src='/logo.svg' alt='Logo'/>
+              <h2 className='font-bold text-lg mt-7'>Sign In With Google</h2>
+              <p>Sign In to the website using Google securely</p>
+              <Button onClick={login} className="w-full mt-5 flex gap-4 items-center">
+                <FcGoogle className='h-7 w-7'/>Sign In With Google
+              </Button>
+            </DialogDescription>
+          </DialogHeader>
+        </DialogContent>
+      </Dialog>
+
     </div>
   );
 }
