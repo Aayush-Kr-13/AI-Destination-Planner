@@ -46,19 +46,19 @@ function CreateTrip() {
 
   const OnGenerateTrip = () => {
     if (!formData?.location) {
-      toast("Please enter your destination");
+      toast({ title: "Please enter your destination", description: "You need to specify a destination for your trip." });
       return;
     }
     if (!formData?.noOfDays) {
-      toast("Please enter how many days you are planning for your trip");
+      toast({ title: "Please enter the number of days", description: "Specify how many days you are planning for your trip." });
       return;
     }
     if (!formData?.budget) {
-      toast("Please enter budget details");
+      toast({ title: "Please enter budget details", description: "Provide your budget for the trip." });
       return;
     }
     if (!formData?.traveler) {
-      toast("Please enter with whom you are going to travel");
+      toast({ title: "Please enter travel companions", description: "Indicate who you are traveling with." });
       return;
     }
 
