@@ -3,7 +3,7 @@ import {Button} from "../ui/button"
 
 const Header = () => {
   return (
-    <div className='p-3 shadow-sm flex justify-between items-center px-5'>
+    <div className='p-3 shadow-sm flex justify-between items-center px-5 ml-5'>
         <img src="/logo.svg"/>
         <div>
             <Button>
