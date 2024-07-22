@@ -5,13 +5,12 @@ import { Input } from '../components/ui/input';
 import { AI_PROMPT, SelectBudgetOptions, SelectTravelList } from '@/constants/options';
 import { toast } from '../components/ui/use-toast';
 import { chatSession } from '@/service/AIModal';
-import { useClerk } from '@clerk/clerk-react';
+import { useClerk, useUser } from '@clerk/clerk-react';
 import {
   Dialog,
   DialogContent,
   DialogDescription,
-  DialogHeader,
-  DialogTitle
+  DialogHeader
 } from "@/components/ui/dialog";
 import { FcGoogle } from "react-icons/fc";
 
@@ -26,7 +25,9 @@ const debounce = (func, delay) => {
 
 function CreateTrip() {
   const [openDialog, setOpenDialog] = useState(false);
-  const { client, openSignIn } = useClerk();
+  const [openSignInDialog, setOpenSignInDialog] = useState(false); // State for sign-in dialog
+  const { client, openSignIn, signOut } = useClerk();
+  const { user } = useUser();
   const [destination, setDestination] = useState('');
   const [data, setData] = useState([]);
   const [error, setError] = useState(null);
@@ -53,12 +54,9 @@ function CreateTrip() {
     console.log(formData);
   }, [formData]);
 
-  const login = () => {
-    openSignIn(); // Ensure this is the correct method from Clerk
-  };
-
   const onGenerateTrip = async () => {
-    if (!client || !client.user) {
+    if (!user) {
+      // Trigger dialog if user is not signed in
       setOpenDialog(true);
       return;
     }
@@ -84,13 +82,16 @@ function CreateTrip() {
       .replace('{location}', formData?.location)
       .replace('{totalDays}', formData?.noOfDays)
       .replace('{traveler}', formData?.traveler)
-      .replace('{budget}', formData?.budget)
-      .replace('{totalDays}', formData?.noOfDays);
+      .replace('{budget}', formData?.budget);
 
     console.log(FINAL_PROMPT);
 
-    const result = await chatSession.sendMessage(FINAL_PROMPT);
-    console.log(result?.response?.text());
+    try {
+      const result = await chatSession.sendMessage(FINAL_PROMPT);
+      console.log(result?.response?.text());
+    } catch (error) {
+      console.error("Error generating trip:", error);
+    }
   };
 
   // Function to handle search
@@ -138,6 +139,25 @@ function CreateTrip() {
     setDestination(cityName);
     handleInputChange('location', cityName);
     setShowDropdown(false);
+  };
+
+  // Function to handle user profile and generate trip
+  const handleUserProfile = async () => {
+    if (user) {
+      try {
+        console.log(user);
+        setOpenDialog(false);
+        await onGenerateTrip();
+      } catch (error) {
+        console.error("Error fetching user profile:", error);
+      }
+    }
+  };
+
+  // Function to handle sign-in
+  const handleSignIn = () => {
+    openSignIn();
+    setOpenDialog(false);
   };
 
   return (
@@ -228,7 +248,7 @@ function CreateTrip() {
       <div className='my-10 justify-end flex'>
         <Button onClick={onGenerateTrip}>Generate Trip</Button>
       </div>
-      
+
       <Dialog open={openDialog} onOpenChange={setOpenDialog}>
         <DialogContent>
           <DialogHeader>
@@ -236,7 +256,7 @@ function CreateTrip() {
               <img src='/logo.svg' alt='Logo'/>
               <h2 className='font-bold text-lg mt-7'>Sign In With Google</h2>
               <p>Sign In to the website using Google securely</p>
-              <Button onClick={login} className="w-full mt-5 flex gap-4 items-center">
+              <Button onClick={handleSignIn} className="w-full mt-5 flex gap-4 items-center">
                 <FcGoogle className='h-7 w-7'/>Sign In With Google
               </Button>
             </DialogDescription>
@@ -244,6 +264,19 @@ function CreateTrip() {
         </DialogContent>
       </Dialog>
 
+      <Dialog open={openSignInDialog} onOpenChange={setOpenSignInDialog}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogDescription>
+              <h2 className='font-bold text-lg mt-7'>You have been signed out</h2>
+              <p>Please sign in again to continue.</p>
+              <Button onClick={openSignIn} className="w-full mt-5 flex gap-4 items-center">
+                <FcGoogle className='h-7 w-7'/>Sign In With Google
+              </Button>
+            </DialogDescription>
+          </DialogHeader>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 }
