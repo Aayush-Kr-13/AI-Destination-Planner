@@ -26,6 +26,13 @@ function CreateTrip() {
   });
 
   const handleInputChange = (name, value) => {
+    if (name === 'noOfDays') {
+      if (value > 5) {
+        alert('Number of days cannot exceed 5.');
+        return;
+      }
+    }
+
     setFormData({
       ...formData,
       [name]: value,
@@ -160,8 +167,8 @@ function CreateTrip() {
           {SelectTravelList.map((item, index) => (
             <div
               key={index}
-              className={`p-4 border cursor-pointer rounded-lg hover:shadow-lg ${formData.traveler === item.title ? 'border-blue-500' : ''}`}
-              onClick={() => handleInputChange('traveler', item.title)}
+              className={`p-4 border cursor-pointer rounded-lg hover:shadow-lg ${formData.traveler === item.people ? 'border-blue-500' : ''}`}
+              onClick={() => handleInputChange('traveler', item.people)}
             >
               <h2 className='text-4xl'>{item.icon}</h2>
               <h2 className='font-bold text-lg'>{item.title}</h2>
