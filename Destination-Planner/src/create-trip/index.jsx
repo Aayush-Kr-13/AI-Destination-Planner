@@ -3,6 +3,7 @@ import axios from 'axios';
 import { Button } from '../components/ui/button';
 import { Input } from '../components/ui/input';
 import { SelectBudgetOptions, SelectTravelList } from '@/constants/options';
+import { toast } from '../components/ui/use-toast'; 
 
 // Debounce function to limit the rate at which the API is called
 const debounce = (func, delay) => {
@@ -42,6 +43,26 @@ function CreateTrip() {
   useEffect(() => {
     console.log(formData);
   }, [formData]);
+
+  const OnGenerateTrip = () => {
+    if (!formData?.location) {
+      toast("Please enter your destination");
+      return;
+    }
+    if (!formData?.noOfDays) {
+      toast("Please enter how many days you are planning for your trip");
+      return;
+    }
+    if (!formData?.budget) {
+      toast("Please enter budget details");
+      return;
+    }
+    if (!formData?.traveler) {
+      toast("Please enter with whom you are going to travel");
+      return;
+    }
+
+  };
 
   // Function to handle search
   const fetchCities = async (query) => {
@@ -179,7 +200,7 @@ function CreateTrip() {
       </div>
       
       <div className='my-10 justify-end flex'>
-        <Button>Generate Trip</Button>
+        <Button onClick={OnGenerateTrip}>Generate Trip</Button>
       </div>
     </div>
   );
