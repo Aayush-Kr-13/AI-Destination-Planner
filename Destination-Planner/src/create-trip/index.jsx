@@ -12,7 +12,7 @@ import GooglePlacesAutocomplete from 'react-google-places-autocomplete'
      <div className='mt-20'>
          <div>
             <h2 className='text-xl my-3 font-medium'>What is destination of choice?</h2>
-              <GooglePlacesAutocomplete
+            <GooglePlacesAutocomplete
                 apiKey={import.meta.env.VITE_GOOGLE_PLACE_API_KEY}
               />
          </div>
