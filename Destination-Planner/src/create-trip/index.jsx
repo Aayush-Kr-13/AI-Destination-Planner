@@ -81,39 +81,40 @@ function CreateTrip() {
 
   // Function to handle search
   const fetchCities = async (query) => {
-    if (query.length < 3) {
-      setData([]);
-      setShowDropdown(false);
-      return;
-    }
+  if (query.length < 3) {
+    setData([]);
+    setShowDropdown(false);
+    return;
+  }
 
-    const options = {
-      method: 'GET',
-      url: 'https://booking-com.p.rapidapi.com/v1/static/cities',
-      params: {
-        page: '0',
-        name: query,
-      },
-      headers: {
-        'x-rapidapi-key': '3e8ef66ca9msh5b1b3703e0f1858p18e899jsn2f40e3f2d1a0',
-        'x-rapidapi-host': 'booking-com.p.rapidapi.com',
-      },
-    };
-
-    try {
-      const response = await axios.request(options);
-      const limitedData = response.data.result.slice(0, 5); // Limit the results to 5
-      setData(limitedData); // Store the limited data in the state
-      setError(null); // Clear any previous error
-      setShowDropdown(true); // Show the dropdown
-      console.log(response.data);
-    } catch (error) {
-      setError(error); // Store the error in the state
-      setData([]); // Clear any previous data
-      setShowDropdown(false); // Hide the dropdown
-      console.error(error);
-    }
+  const options = {
+    method: 'GET',
+    url: 'https://booking-com.p.rapidapi.com/v1/static/cities',
+    params: {
+      page: '0',
+      name: query,
+    },
+    headers: {
+      'x-rapidapi-key': import.meta.env.VITE_RAPIDAPI_KEY,
+      'x-rapidapi-host': 'booking-com.p.rapidapi.com',
+    },
   };
+
+  try {
+    const response = await axios.request(options);
+    const limitedData = response.data.result.slice(0, 5); // Limit the results to 5
+    setData(limitedData); // Store the limited data in the state
+    setError(null); // Clear any previous error
+    setShowDropdown(true); // Show the dropdown
+    console.log(response.data);
+  } catch (error) {
+    setError(error); // Store the error in the state
+    setData([]); // Clear any previous data
+    setShowDropdown(false); // Hide the dropdown
+    console.error(error);
+  }
+};
+
 
   // Debounced search function
   const debouncedFetchCities = debounce(fetchCities, 300);
