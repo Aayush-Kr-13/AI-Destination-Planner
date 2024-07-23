@@ -16,6 +16,7 @@ import {
   DialogHeader
 } from "@/components/ui/dialog";
 import { FcGoogle } from "react-icons/fc";
+import { useNavigate } from 'react-router-dom';
 
 // Debounce function to limit the rate at which the API is called
 const debounce = (func, delay) => {
@@ -42,6 +43,7 @@ function CreateTrip() {
     traveler: '',
   });
   const[loading,setLoading]=useState(false);
+  const navigate=useNavigate();
 
   const handleInputChange = (name, value) => {
     if (name === 'noOfDays' && value > 5) {
@@ -113,6 +115,7 @@ function CreateTrip() {
       id:docId
     });
     setLoading(false);
+    navigate("/view-trip/"+docId)
   };
 
   // Function to handle search
