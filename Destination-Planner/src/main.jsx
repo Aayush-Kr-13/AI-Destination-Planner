@@ -7,6 +7,7 @@ import CreateTrip from './create-trip/index.jsx'
 import Header from './components/custom/Header.jsx'
 import { Toaster } from './components/ui/toaster.jsx'
 import { ClerkProvider } from '@clerk/clerk-react'
+import Viewtrip from './view-trip/[tripId]/index.jsx'
 
 const PUBLISHABLE_KEY = import.meta.env.VITE_CLERK_PUBLISHABLE_KEY
 
@@ -22,6 +23,10 @@ const router = createBrowserRouter([
   {
     path: "/create-trip",
     element: <CreateTrip/> 
+  },
+  {
+    path: "/view-trip/:tripId",
+    element: <Viewtrip/> 
   }
 ]);
 
