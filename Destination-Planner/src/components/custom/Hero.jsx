@@ -1,10 +1,10 @@
-import React from 'react'
-import { Button } from "../ui/button"
-import { Link } from "react-router-dom"
+import React from 'react';
+import { Button } from "../ui/button";
+import { Link } from "react-router-dom";
 
 function Hero() {
   return (
-    <div className="flex flex-col items-center mx-8 md:mx-56 gap-9">
+    <div className="relative flex flex-col items-center mx-8 md:mx-56 gap-9 z-10">
       <h1 className='font-extrabold text-4xl md:text-[60px] text-center mt-16 leading-tight transition-transform transform hover:scale-105'>
         <span className='text-[#f56551]'>Discover Your Next Adventure with AI:</span> 
         <span className="block">Personalized Itineraries at Your Fingertips</span>
@@ -18,7 +18,7 @@ function Hero() {
         </Button>
       </Link>
     </div>
-  )
+  );
 }
 
-export default Hero
+export default Hero;
