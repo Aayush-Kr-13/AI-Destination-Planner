@@ -45,7 +45,7 @@ function CreateTrip() {
 
   const handleInputChange = (name, value) => {
     if (name === 'noOfDays' && value > 5) {
-      alert('Number of days cannot exceed 5.');
+      toast({ title: "Please enter days less than 5", description: "Number of days cannot exceed 5" });
       return;
     }
     setFormData({
