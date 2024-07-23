@@ -128,7 +128,7 @@ function CreateTrip() {
       url: 'https://booking-com.p.rapidapi.com/v1/static/cities',
       params: { page: '0', name: query },
       headers: {
-        'x-rapidapi-key': VITE_RAPIDAPI_KEY,
+        'x-rapidapi-key': import.meta.env.VITE_RAPIDAPI_KEY,
         'x-rapidapi-host': 'booking-com.p.rapidapi.com',
       },
     };
