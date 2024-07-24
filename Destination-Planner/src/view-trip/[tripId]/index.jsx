@@ -1,6 +1,6 @@
-import { doc, getDoc } from 'firebase/firestore';
-import React, { useEffect, useCallback,useState} from 'react';
+import React, { useEffect, useCallback, useState } from 'react';
 import { useParams } from 'react-router-dom';
+import { doc, getDoc } from 'firebase/firestore';
 import { db } from '@/service/firebaseConfig';
 import { toast } from '@/components/ui/use-toast';
 import InfoSection from '../components/InfoSection';
@@ -10,7 +10,7 @@ import Footer from '../components/Footer';
 
 function Viewtrip() {
   const { tripId } = useParams();
-  const[trip,setTrip]=useState([]);
+  const [trip, setTrip] = useState(null);
 
   const GetTripData = useCallback(async () => {
     const docRef = doc(db, 'AllTrips', tripId);
@@ -32,10 +32,10 @@ function Viewtrip() {
 
   return (
     <div className="p-10 md:px-20 lg:px-44 xl:px-56">
-         <InfoSection trip={trip} />
-         <Hotels trip={trip} />
-         <PlacesToVisit trip={trip} />
-         <Footer trip={trip} />
+      <InfoSection trip={trip} />
+      <Hotels trip={trip} />
+      <PlacesToVisit trip={trip} />
+      <Footer trip={trip} />
     </div>
   );
 }
