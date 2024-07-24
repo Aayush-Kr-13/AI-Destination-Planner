@@ -1,17 +1,23 @@
 import { doc, getDoc } from 'firebase/firestore';
-import React, { useEffect, useCallback } from 'react';
+import React, { useEffect, useCallback,useState} from 'react';
 import { useParams } from 'react-router-dom';
 import { db } from '@/service/firebaseConfig';
 import { toast } from '@/components/ui/use-toast';
+import InfoSection from '../components/InfoSection';
+import Hotels from '../components/Hotels';
+import PlacesToVisit from '../components/PlacesToVisit';
+import Footer from '../components/Footer';
 
 function Viewtrip() {
   const { tripId } = useParams();
+  const[trip,setTrip]=useState([]);
 
   const GetTripData = useCallback(async () => {
     const docRef = doc(db, 'AllTrips', tripId);
     const docSnap = await getDoc(docRef);
     if (docSnap.exists()) {
       console.log("Document:", docSnap.data());
+      setTrip(docSnap.data());
     } else {
       console.log("No Such Document");
       toast({ title: "No trip found", description: "Please check your trip ID." });
@@ -25,7 +31,12 @@ function Viewtrip() {
   }, [tripId, GetTripData]);
 
   return (
-    <div>Viewtrip: {tripId}</div>
+    <div className="p-10 md:px-20 lg:px-44 xl:px-56">
+         <InfoSection trip={trip} />
+         <Hotels trip={trip} />
+         <PlacesToVisit trip={trip} />
+         <Footer trip={trip} />
+    </div>
   );
 }
 
