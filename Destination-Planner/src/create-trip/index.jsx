@@ -42,8 +42,8 @@ function CreateTrip() {
     budget: '',
     traveler: '',
   });
-  const[loading,setLoading]=useState(false);
-  const navigate=useNavigate();
+  const [loading, setLoading] = useState(false);
+  const navigate = useNavigate();
 
   const handleInputChange = (name, value) => {
     if (name === 'noOfDays' && value > 5) {
@@ -112,10 +112,10 @@ function CreateTrip() {
       tripData: JSON.parse(TripData),
       // Add email address of the user
       userEmail: user.primaryEmailAddress.emailAddress,
-      id:docId
+      id: docId
     });
     setLoading(false);
-    navigate("/view-trip/"+docId)
+    navigate("/view-trip/" + docId);
   };
 
   // Function to handle search
@@ -186,15 +186,15 @@ function CreateTrip() {
   };
 
   return (
-    <div className='sm:px-10 md:px-32 lg:px-56 xl:px-10 px-5 mt-10'>
-      <h2 className='font-bold text-3xl'>Tell us your travel preferences 🏕️🌴</h2>
-      <p className='mt-3 text-gray-500 text-xl'>
+    <div className='sm:px-10 md:px-32 lg:px-56 xl:px-64 px-5 mt-10'>
+      <h2 className='font-bold text-3xl text-orange-600'>Tell us your travel preferences 🏕️🌴</h2>
+      <p className='mt-3 text-gray-600 text-xl'>
         Just provide some basic information, and our trip planner will generate a customized itinerary based on your preferences.
       </p>
 
       <div className='mt-20 flex flex-col gap-10'>
         <div>
-          <h2 className='text-xl my-3 font-medium'>What is your destination of choice?</h2>
+          <h2 className='text-xl my-3 font-semibold'>What is your destination of choice?</h2>
           <div className='relative'>
             <Input
               type='text'
@@ -204,7 +204,7 @@ function CreateTrip() {
               className='mr-2'
             />
             {showDropdown && (
-              <div className='absolute z-10 w-full bg-white border border-gray-300 mt-1'>
+              <div className='absolute z-10 w-full bg-white border border-gray-300 mt-1 rounded-lg shadow-md'>
                 {data.map((city) => (
                   <div
                     key={city.city_id}
@@ -220,7 +220,7 @@ function CreateTrip() {
         </div>
 
         <div>
-          <h2 className='text-xl my-3 font-medium'>How many days you are planning for your trip?</h2>
+          <h2 className='text-xl my-3 font-semibold'>How many days you are planning for your trip?</h2>
           <Input
             placeholder={'Ex.3'}
             type="number"
@@ -237,16 +237,16 @@ function CreateTrip() {
       </div>
       
       <div>
-        <h2 className='text-xl my-3 font-medium'>What is your budget?</h2>
+        <h2 className='text-xl my-3 font-semibold'>What is your budget?</h2>
         <div className='grid grid-cols-3 gap-5 mt-5'>
           {SelectBudgetOptions.map((item, index) => (
             <div
               key={index}
-              className={`p-4 border cursor-pointer rounded-lg hover:shadow-lg ${formData.budget === item.title ? 'border-blue-500' : ''}`}
+              className={`p-4 border cursor-pointer rounded-lg hover:shadow-lg transition-all duration-300 ${formData.budget === item.title ? 'border-blue-500 bg-blue-50' : ''}`}
               onClick={() => handleInputChange('budget', item.title)}
             >
               <h2 className='text-4xl'>{item.icon}</h2>
-              <h2 className='font-bold text-lg'>{item.title}</h2>
+              <h2 className='font-bold text-lg mt-2'>{item.title}</h2>
               <h2 className='text-sm text-gray-500'>{item.desc}</h2>
             </div>
           ))}
@@ -254,16 +254,16 @@ function CreateTrip() {
       </div>
       
       <div>
-        <h2 className='text-xl my-3 font-medium'>Who do you plan on travelling with on your next adventure?</h2>
+        <h2 className='text-xl my-3 font-semibold'>Who do you plan on traveling with on your next adventure?</h2>
         <div className='grid grid-cols-3 gap-5 mt-5'>
           {SelectTravelList.map((item, index) => (
             <div
               key={index}
-              className={`p-4 border cursor-pointer rounded-lg hover:shadow-lg ${formData.traveler === item.people ? 'border-blue-500' : ''}`}
+              className={`p-4 border cursor-pointer rounded-lg hover:shadow-lg transition-all duration-300 ${formData.traveler === item.people ? 'border-blue-500 bg-blue-50' : ''}`}
               onClick={() => handleInputChange('traveler', item.people)}
             >
               <h2 className='text-4xl'>{item.icon}</h2>
-              <h2 className='font-bold text-lg'>{item.title}</h2>
+              <h2 className='font-bold text-lg mt-2'>{item.title}</h2>
               <h2 className='text-sm text-gray-500'>{item.desc}</h2>
             </div>
           ))}
@@ -271,10 +271,10 @@ function CreateTrip() {
       </div>
       
       <div className='my-10 justify-end flex'>
-        <Button disabled={loading} onClick={onGenerateTrip}>
-        {
-          loading?<AiOutlineLoading3Quarters className="h-7 w-7 animate-spin" /> :"Generate Trip"
-        }
+        <Button disabled={loading} onClick={onGenerateTrip} className="bg-orange-600 text-white hover:bg-orange-700">
+          {
+            loading ? <AiOutlineLoading3Quarters className="h-7 w-7 animate-spin" /> : "Generate Trip"
+          }
         </Button>
       </div>
 
@@ -282,11 +282,11 @@ function CreateTrip() {
         <DialogContent>
           <DialogHeader>
             <DialogDescription>
-              <img src='/logo.svg' alt='Logo'/>
+              <img src='/logo.svg' alt='Logo' className="mx-auto w-24"/>
               <h2 className='font-bold text-lg mt-7'>Sign In With Google</h2>
               <p>Sign In to the website using Google securely</p>
-              <Button onClick={handleSignIn} className="w-full mt-5 flex gap-4 items-center">
-                <FcGoogle className='h-7 w-7'/>Sign In With Google
+              <Button onClick={handleSignIn} className="w-full mt-5 flex gap-4 items-center justify-center bg-blue-600 text-white hover:bg-blue-700">
+                <FcGoogle className='h-7 w-7' /> Sign In With Google
               </Button>
             </DialogDescription>
           </DialogHeader>
@@ -299,8 +299,8 @@ function CreateTrip() {
             <DialogDescription>
               <h2 className='font-bold text-lg mt-7'>You have been signed out</h2>
               <p>Please sign in again to continue.</p>
-              <Button onClick={openSignIn} className="w-full mt-5 flex gap-4 items-center">
-                <FcGoogle className='h-7 w-7'/>Sign In With Google
+              <Button onClick={openSignIn} className="w-full mt-5 flex gap-4 items-center justify-center bg-blue-600 text-white hover:bg-blue-700">
+                <FcGoogle className='h-7 w-7' /> Sign In With Google
               </Button>
             </DialogDescription>
           </DialogHeader>
