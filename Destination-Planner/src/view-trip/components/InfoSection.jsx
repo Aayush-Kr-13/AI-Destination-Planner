@@ -30,7 +30,7 @@ function InfoSection({ trip }) {
   
     try {
       const response = await axios.request(options);
-      console.log(response.data.items[0].originalImageUrl);
+      console.log(response.data);
       const PhotoUrl = response.data.items[0].originalImageUrl;
       setPhotoUrl(PhotoUrl);
       return response.data;

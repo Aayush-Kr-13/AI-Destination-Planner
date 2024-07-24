@@ -64,7 +64,7 @@ function PlaceCardItem({ place }) {
         <img 
           src={photoUrl || "/landing.png"} 
           alt="visit"
-          className='w-[130px] h-[130px] rounded-xl'
+          className='w-[130px] h-[130px] rounded-xl object-cover'
         />
         <div>
           <h2 className='font-bold text-lg'>{place.placeName}</h2>
