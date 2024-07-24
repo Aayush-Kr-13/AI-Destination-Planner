@@ -24,6 +24,11 @@ const Header = () => {
   return (
     <div className='p-3 shadow-sm flex justify-between items-center px-5 ml-5'>
       <img src="/logo.svg" alt="Logo" />
+      <img 
+        src="/Adventura2.png" 
+        alt="Adventura" 
+        style={{ width: '150px', height: '50px', marginLeft: '15px' }} // Add margin here
+      />
       <div className='flex items-center gap-4 ml-auto'>
         {isSignedIn && (
           <div className='flex items-center gap-4'>

@@ -10,6 +10,7 @@
   will-change: filter;
   transition: filter 300ms;
 }
+
 .logo:hover {
   filter: drop-shadow(0 0 2em #646cffaa);
 }
@@ -25,3 +26,21 @@
     transform: rotate(360deg);
   }
 }
+
+.carousel .carousel-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 10px;
+}
+
+.carousel .carousel-grid img.carousel-img {
+  width: 90%; /* Decrease width by 10% */
+  height: 150px;
+  object-fit: cover;
+  border-radius: 20px;
+  margin: 0 auto;
+}
+
+
+
+
